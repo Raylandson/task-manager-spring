@@ -1,28 +1,27 @@
 package com.example.taskmanager.model.entity;
 
-//import com.example.taskmanager.model.entity.Task;
-//import java.util.List;
-//import java.util.Objects;
 import java.util.ArrayList;
-import org.springframework.stereotype.Component;
 
-@Component
+
 public class User {
     private Long id;
     private String username;
     private String password;
     private ArrayList<Task> tasks;
 
+    private static Long idCounter = 0L;
+
     public User() {
-        System.out.println("User created: " + this.toString());
+        this.id = idCounter++;
+        System.out.println("User created bean: " + this.toString());
     }
 
-    public User(Long id, String username, String password) {
-        this.id = id;
+    public User(String username, String password) {
+        this.id = idCounter++;
         this.username = username;
         this.password = password;
         this.tasks = new ArrayList<Task>();
-        System.out.println("User created: " + this.toString());
+        System.out.println("User created construct: " + this.toString());
     }
 
     public Long getId() {

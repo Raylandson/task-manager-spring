@@ -8,11 +8,13 @@ public class Task {
     private String title;
     private Boolean completed;
 
+    private static long idCounter = 0L;
+
     public Task() {
     }
 
-    public Task(long id, String title, Boolean completed) {
-        this.id = id;
+    public Task(String title, Boolean completed) {
+        this.id = idCounter++;
         this.title = title;
         this.completed = completed;
     }
