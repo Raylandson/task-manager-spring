@@ -45,7 +45,9 @@ public class Facade {
         User logged_user = userService.authenticateUser(userDTO, session);
         logged_user.setTasks(taskService.getTasksById(logged_user.getId()));
         System.out.println("Logged in user: " + logged_user.getUsername());
-        System.out.println("Logged in user tasks: " + logged_user.getTasks());
+        for (Task task : logged_user.getTasks()){
+            System.out.println("Task: " + task.getTitle());
+        }
     }
 
     public void logout(HttpSession session) {

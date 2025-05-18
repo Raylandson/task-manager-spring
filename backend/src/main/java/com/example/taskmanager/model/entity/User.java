@@ -2,21 +2,36 @@ package com.example.taskmanager.model.entity;
 
 import java.util.ArrayList;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+
+@Entity
+@Table(name = "users")
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true, nullable = false, length = 50)
     private String username;
+
+    @Column(name = "userpassword", nullable = false, length = 50)
     private String password;
+
+    @Transient
     private ArrayList<Task> tasks;
 
-    private static Long idCounter = 0L;
-
     public User() {
-        this.id = idCounter++;
         System.out.println("User created bean: " + this.toString());
     }
 
     public User(String username, String password) {
-        this.id = idCounter++;
         this.username = username;
         this.password = password;
         this.tasks = new ArrayList<Task>();

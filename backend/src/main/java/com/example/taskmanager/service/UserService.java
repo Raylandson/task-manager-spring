@@ -19,18 +19,26 @@ public class UserService {
     UserRepository userRepository;
 
     public void addTaskToUser(String userName, Task task) {
-        User user = userRepository.getUser(userName);
+        User user = userRepository.findByUsername(userName).orElse(null);
+        if (user == null) {
+            // throw exception here
+            return;
+        }
         user.getTasks().add(task);
     }
 
     public void removeTaskFromUser(String userName, Task task) {
-        User user = userRepository.getUser(userName);
+        User user = userRepository.findByUsername(userName).orElse(null);
+        if (user == null) {
+            // throw exception here
+            return;
+        }
         user.getTasks().remove(task);
     }
 
     public User authenticateUser(UserDTO userDTO, HttpSession session)
             throws InvalidLoginException {
-        User user = userRepository.getUser(userDTO.getUsername());
+        User user = userRepository.findByUsername(userDTO.getUsername()).orElse(null);
         if (user == null || !user.getPassword().equals(userDTO.getPassword())) {
             throw new InvalidLoginException();
         }
@@ -42,7 +50,7 @@ public class UserService {
     public void createUser(String userName, String password, HttpSession session)
             throws UsernameInvalidException, PasswordInvalidException {
         User newUser = new User(userName, password);
-        userRepository.addUser(newUser);
+        userRepository.save(newUser);
 
         session.setAttribute("user", newUser);
 

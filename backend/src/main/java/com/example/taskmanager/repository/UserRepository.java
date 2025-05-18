@@ -1,45 +1,27 @@
 package com.example.taskmanager.repository;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Optional;
 
+// import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.taskmanager.exceptions.UsernameInvalidException;
 import com.example.taskmanager.model.entity.User;
 
+// import io.micrometer.common.lang.NonNull;
+
 @Repository
-public class UserRepository {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    private Queue<User> users;
+    Optional<User> findByUsername(String username);
 
-    public UserRepository() {
-        this.users = new ConcurrentLinkedQueue<>();
-    }
 
-    public void addUser(User user) throws UsernameInvalidException {
-        for (User existingUser : users) {
-            if (existingUser.getUsername().equals(user.getUsername())) {
-                throw new UsernameInvalidException();
-            }
-        }
-        users.add(user);
-    }
+    // Optional<User> findById(Long id);
 
-    public User getUser(String username) {
-        for (User user : users) {
-            if (user.getUsername().equals(username)) {
-                return user;
-            }
-        }
-        return null;
-    }
+    // void deleteById(@NonNull Long id);
 
-    public void removeUser(String username) {
-        users.removeIf(user -> user.getUsername().equals(username));
-    }
+    // void deleteByUsername(String username);
 
-    public Queue<User> getUsers() {
-        return users;
-    }
+    // User save(User user);
 }
