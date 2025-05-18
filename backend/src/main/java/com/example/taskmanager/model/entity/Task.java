@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Task {
     private long id;
+    private long userId;
     private String title;
     private Boolean completed;
 
@@ -13,8 +14,9 @@ public class Task {
     public Task() {
     }
 
-    public Task(String title, Boolean completed) {
+    public Task(long userId, String title, Boolean completed) {
         this.id = idCounter++;
+        this.userId = userId;
         this.title = title;
         this.completed = completed;
     }
@@ -41,5 +43,12 @@ public class Task {
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }

@@ -2,7 +2,6 @@ package com.example.taskmanager.model.entity;
 
 import java.util.ArrayList;
 
-
 public class User {
     private Long id;
     private String username;
@@ -62,6 +61,14 @@ public class User {
 
     public void setTasks(ArrayList<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public void addTask(Task task) {
+        this.tasks.add(task);
+    }
+
+    public void removeTask(Task task) {
+        this.tasks.remove(task);
     }
 
 }

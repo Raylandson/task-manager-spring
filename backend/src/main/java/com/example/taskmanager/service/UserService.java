@@ -3,8 +3,8 @@ package com.example.taskmanager.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.taskmanager.exceptions.InvalidLoginException;
 import com.example.taskmanager.exceptions.PasswordInvalidException;
-import com.example.taskmanager.exceptions.UserNotFoundException;
 import com.example.taskmanager.exceptions.UsernameInvalidException;
 import com.example.taskmanager.model.dto.UserDTO;
 import com.example.taskmanager.model.entity.Task;
@@ -28,33 +28,24 @@ public class UserService {
         user.getTasks().remove(task);
     }
 
-    public void authenticateUser(UserDTO userDTO, HttpSession session) 
-    throws UserNotFoundException, PasswordInvalidException {
+    public User authenticateUser(UserDTO userDTO, HttpSession session)
+            throws InvalidLoginException {
         User user = userRepository.getUser(userDTO.getUsername());
-        if (user == null) {
-            throw new UserNotFoundException();
+        if (user == null || !user.getPassword().equals(userDTO.getPassword())) {
+            throw new InvalidLoginException();
         }
-        if (!user.getPassword().equals(userDTO.getPassword())) {
-            throw new PasswordInvalidException();
-        }
+        // intermediate level between the user service and authentication service
         session.setAttribute("user", user);
-
+        return user;
     }
 
     public void createUser(String userName, String password, HttpSession session)
             throws UsernameInvalidException, PasswordInvalidException {
-        // doing some validation here
-        if (userName == null || userName.isEmpty() || userName.length() > 25) {
-            throw new UsernameInvalidException();
-        }
-        if (password == null || password.isEmpty()
-                || password.length() < 6 || password.length() > 25) {
-            throw new PasswordInvalidException();
-        }
         User newUser = new User(userName, password);
         userRepository.addUser(newUser);
+
         session.setAttribute("user", newUser);
-        
+
     }
 
 }
