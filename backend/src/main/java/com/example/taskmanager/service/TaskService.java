@@ -19,20 +19,27 @@ public class TaskService {
         return task;
     }
 
+    public void deleteTask(long taskId, long userId) {
+        Task task = taskRepository.findById(taskId).orElse(null);
+        if (task == null || task.getUserId() != userId) {
+            // throw exception here
+            return;
+        }
+        taskRepository.delete(task);
+    }
+
     public ArrayList<Task> getTasksById(long userId) {
         return taskRepository.getAllTasksByUserId(userId);
     }
 
-    public void deleteTask(long taskId) {
-        taskRepository.deleteById(taskId);
-    }
-    public void updateTask(long taskId, String taskTitle) {
+    public void updateTask(long taskId, String taskTitle, boolean completed) {
         Task task = taskRepository.findById(taskId).orElse(null);
         if (task == null) {
             // throw exception here
             return;
         }
         task.setTitle(taskTitle);
+        task.setCompleted(completed);
         taskRepository.save(task);
     }
 }

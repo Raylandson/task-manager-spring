@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.example.taskmanager.exceptions.InvalidLoginException;
 import com.example.taskmanager.exceptions.PasswordInvalidException;
 import com.example.taskmanager.exceptions.UsernameInvalidException;
+import com.example.taskmanager.model.dto.TaskDTO;
 import com.example.taskmanager.model.dto.UserDTO;
 import com.example.taskmanager.model.entity.Task;
 import com.example.taskmanager.model.entity.User;
@@ -22,17 +23,38 @@ public class Facade {
     TaskService taskService;
 
     public void createTask(String taskName, HttpSession session)
-        throws Exception {
+            throws Exception {
         User user = (User) session.getAttribute("user");
-        if(user == null) {
+        if (user == null) {
             throw new Exception("User not logged in");
-        }        //taskService.createTask(taskName, session);
+        } // taskService.createTask(taskName, session);
         long userId = user.getId();
 
         Task newTask = taskService.createTask(userId, taskName);
 
         user.addTask(newTask);
 
+    }
+
+    public void deleteTask(long taskID, HttpSession session)
+            throws Exception {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new Exception("User not logged in");
+        }
+        // i think that its right to use taskDTO.getId() here
+        // because we are using the taskDTO object to get the id of the task
+        // and every task has a unique id
+        taskService.deleteTask(taskID, user.getId());
+    }
+
+    public void updateTask(TaskDTO taskDTO, HttpSession session)
+            throws Exception {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new Exception("User not logged in");
+        }
+        taskService.updateTask(taskDTO.getId(), taskDTO.getTitle(), taskDTO.isCompleted());
     }
 
     public void createUser(UserDTO userDTO, HttpSession session)
@@ -45,7 +67,7 @@ public class Facade {
         User logged_user = userService.authenticateUser(userDTO, session);
         logged_user.setTasks(taskService.getTasksById(logged_user.getId()));
         System.out.println("Logged in user: " + logged_user.getUsername());
-        for (Task task : logged_user.getTasks()){
+        for (Task task : logged_user.getTasks()) {
             System.out.println("Task: " + task.getTitle());
         }
     }
